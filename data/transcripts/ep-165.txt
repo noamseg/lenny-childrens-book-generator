@@ -1,0 +1,49 @@
+Lenny: Today I'm joined by Claire Hughes Johnson, author of "Scaling People" and former COO of Stripe. Claire, welcome!
+
+Claire: Thank you, Lenny. It's great to be here.
+
+Lenny: Your book has become essential reading for anyone building teams. Let's start with the basics - what does "scaling people" actually mean?
+
+Claire: At its core, scaling people is about creating systems that allow individuals to do their best work as an organization grows. When you're a small team, everything is informal. You can walk over to someone's desk and align. But as you grow, you need operating systems - clear ways of working that maintain quality and speed.
+
+Lenny: What are the key operating systems companies need?
+
+Claire: I think about it in layers. First, you need clarity on mission and strategy. Everyone should be able to articulate why the company exists and what you're trying to achieve. This sounds obvious, but it's remarkable how many companies don't have this clarity.
+
+Second, you need clear goals. At Stripe, we used a system where every team had metrics they owned. Not too many - usually 2-3 key metrics. And those metrics rolled up to company goals.
+
+Third, you need great communication rhythms. Regular team meetings, company all-hands, written updates. The cadence matters less than the consistency.
+
+Lenny: Let's talk about hiring. What makes someone great at building teams?
+
+Claire: The best team builders share a few traits. First, they're incredibly clear communicators. They can explain complex things simply. They write well. They run efficient meetings.
+
+Second, they genuinely care about developing people. They give feedback constantly, not just during reviews. They celebrate wins. They create opportunities for growth.
+
+Third, they're decisive but humble. They make calls when needed but change their mind when presented with new information.
+
+Lenny: How do you create a culture of feedback?
+
+Claire: It starts at the top. Leaders need to model receiving feedback gracefully. When someone gives you feedback, thank them. Show them you've heard it. Act on it when appropriate.
+
+I also believe in making feedback normal, not special. At Stripe, we had a culture of "strong opinions, loosely held." Debate was expected. Disagreement was healthy. But once a decision was made, everyone committed.
+
+Lenny: What about managing through uncertainty and change?
+
+Claire: This is where communication becomes critical. In uncertain times, people want to know three things: What do we know? What are we doing about it? When will we know more?
+
+Leaders often make the mistake of waiting until they have all the answers. But silence breeds anxiety. Regular communication, even if it's "we don't know yet," builds trust.
+
+Lenny: Any advice for first-time managers?
+
+Claire: A few things. First, the transition from individual contributor to manager is harder than most people expect. Your job is completely different now. Your success is measured by your team's success, not your own output.
+
+Second, invest in one-on-ones. Weekly 30-minute conversations with each direct report. Ask how they're doing. Ask what's blocking them. Ask how you can help.
+
+Third, make decisions. New managers often avoid decisions because they're unsure. But indecision is worse than a wrong decision. Make the call, learn from the outcome, adjust.
+
+And finally, take care of yourself. Management is emotionally taxing. Find mentors. Build peer relationships. Take time to recharge.
+
+Lenny: This is incredible advice. Thank you, Claire!
+
+Claire: My pleasure, Lenny. These conversations are so important.

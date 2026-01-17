@@ -1,0 +1,87 @@
+'use client';
+
+import { Fragment, ReactNode } from 'react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+export default function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = 'md',
+}: ModalProps) {
+  if (!isOpen) return null;
+
+  const sizes = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+  };
+
+  return (
+    <Fragment>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          className={`
+            ${sizes[size]} w-full bg-white rounded-3xl shadow-playful-lg
+            transform transition-all
+            animate-in fade-in zoom-in-95 duration-200
+          `}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? 'modal-title' : undefined}
+        >
+          {/* Header */}
+          {title && (
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h2
+                id="modal-title"
+                className="text-xl font-bold text-gray-900"
+              >
+                {title}
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Close modal"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="p-6">{children}</div>
+        </div>
+      </div>
+    </Fragment>
+  );
+}

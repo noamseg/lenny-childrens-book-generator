@@ -1,0 +1,35 @@
+Lenny: Welcome to Lenny's Podcast. Today I'm excited to have Brian Chesky, co-founder and CEO of Airbnb.
+
+Brian Chesky: Thanks for having me, Lenny. Really excited to be here.
+
+Lenny: Brian, let's start with the early days of Airbnb. How did you come up with the idea?
+
+Brian Chesky: Well, it's a funny story. Joe and I were living in San Francisco, and we couldn't afford rent. There was a design conference in town and all the hotels were sold out. So we bought some air mattresses, created a simple website called Air Bed and Breakfast, and hosted three guests. That was the beginning.
+
+Lenny: That's incredible. And now Airbnb is worth over $80 billion. What was the key insight that made it work?
+
+Brian Chesky: I think the key insight was trust. We realized that if you could create trust between strangers, you could unlock this massive inventory of homes that were just sitting empty. The review system was crucial - it created accountability on both sides.
+
+Lenny: Speaking of product development, how do you think about building products at Airbnb?
+
+Brian Chesky: I'm a designer by training, so I think about everything through the lens of design. The most important thing is to be obsessed with your customers. We used to actually stay with hosts to understand their experience. You can't build a great product from a conference room.
+
+Lenny: What's your advice for founders who are just starting out?
+
+Brian Chesky: First, do things that don't scale. In the early days, we personally photographed listings, we met hosts in person, we did everything manually. Second, focus on a small group of people who absolutely love your product rather than a large group who kind of like it. And third, the best way to predict the future is to design it.
+
+Lenny: That's powerful. "The best way to predict the future is to design it."
+
+Brian Chesky: Exactly. At Airbnb, we don't just react to trends, we try to create them. When we launched Experiences, everyone said people only want cheap accommodations. But we believed travel should be about more than just where you stay - it should be about what you do.
+
+Lenny: How do you think about leadership and managing a company at Airbnb's scale?
+
+Brian Chesky: Leadership is really about setting a vision and then getting everyone aligned around it. I spend a lot of time on communication - making sure everyone understands not just what we're doing, but why. The "why" is what motivates people.
+
+Lenny: Any final thoughts for our listeners?
+
+Brian Chesky: Build something you're passionate about. The journey is long and hard, and if you're not passionate, you won't make it through the tough times. And remember, every big company started as a small idea that most people thought was crazy.
+
+Lenny: Brian, thank you so much for being on the podcast. This was incredibly valuable.
+
+Brian Chesky: Thanks, Lenny. Great conversation.

@@ -1,0 +1,40 @@
+[
+  {
+    "id": "guest-001",
+    "name": "Brian Chesky",
+    "title": "Co-founder & CEO",
+    "company": "Airbnb",
+    "bio": "Brian Chesky co-founded Airbnb and has led it from a simple idea of air mattresses in a living room to a global hospitality company. He's known for his design-driven approach to building products and his focus on creating experiences people love.",
+    "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+    "linkedIn": "https://linkedin.com/in/brianchesky",
+    "twitter": "@bchesky"
+  },
+  {
+    "id": "guest-002",
+    "name": "Claire Hughes Johnson",
+    "title": "Corporate Officer & Advisor",
+    "company": "Stripe",
+    "bio": "Claire Hughes Johnson spent over a decade at Google before joining Stripe as COO. She's the author of 'Scaling People' and is known for her expertise in building and scaling high-performing organizations.",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+    "linkedIn": "https://linkedin.com/in/clairehughesjohnson",
+    "twitter": "@chaboryk"
+  },
+  {
+    "id": "guest-003",
+    "name": "Keith Rabois",
+    "title": "General Partner",
+    "company": "Khosla Ventures",
+    "bio": "Keith Rabois is a legendary Silicon Valley operator and investor. He was an early executive at PayPal, LinkedIn, and Square, and is known for his frameworks on building companies that ship fast.",
+    "photoUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+    "linkedIn": "https://linkedin.com/in/rabois",
+    "twitter": "@rabois"
+  },
+  {
+    "id": "1768689850036-2ym28j4",
+    "name": "Brian Chesky",
+    "title": "Co-founder & CEO",
+    "company": "Airbnb",
+    "bio": "",
+    "photoUrl": ""
+  }
+]

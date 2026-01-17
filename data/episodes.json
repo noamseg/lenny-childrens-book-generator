@@ -1,0 +1,113 @@
+[
+  {
+    "id": "ep-001",
+    "episodeNumber": 178,
+    "title": "The Art of Founder Mode",
+    "description": "Brian Chesky shares how he transformed Airbnb by getting deeply involved in product decisions and why founders should stay close to the details.",
+    "publishDate": "2024-01-15",
+    "duration": "1h 23m",
+    "guestId": "guest-001",
+    "featuredQuote": "The best products are built by people who are obsessed with the details. You can't delegate taste.",
+    "quoteTimestamp": "34:12",
+    "topics": [
+      "Product",
+      "Leadership",
+      "Strategy",
+      "Culture"
+    ],
+    "transcriptPath": "transcripts/ep-178.txt",
+    "spotifyUrl": "https://open.spotify.com/show/lennyspodcast",
+    "youtubeUrl": "https://youtube.com/lennyspodcast",
+    "booksGenerated": 42,
+    "guest": {
+      "id": "guest-001",
+      "name": "Brian Chesky",
+      "title": "Co-founder & CEO",
+      "company": "Airbnb",
+      "bio": "Brian Chesky co-founded Airbnb and has led it from a simple idea of air mattresses in a living room to a global hospitality company. He's known for his design-driven approach to building products and his focus on creating experiences people love.",
+      "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+      "linkedIn": "https://linkedin.com/in/brianchesky",
+      "twitter": "@bchesky"
+    }
+  },
+  {
+    "id": "ep-002",
+    "episodeNumber": 165,
+    "title": "Scaling People and Organizations",
+    "description": "Claire Hughes Johnson discusses her frameworks for building high-performing teams and the operating systems that make great companies work.",
+    "publishDate": "2024-01-08",
+    "duration": "1h 15m",
+    "guestId": "guest-002",
+    "featuredQuote": "The job of a leader is to create clarity. When people understand the mission and how their work connects to it, magic happens.",
+    "quoteTimestamp": "28:45",
+    "topics": [
+      "Leadership",
+      "Hiring",
+      "Culture",
+      "Strategy"
+    ],
+    "transcriptPath": "transcripts/ep-165.txt",
+    "spotifyUrl": "https://open.spotify.com/show/lennyspodcast",
+    "youtubeUrl": "https://youtube.com/lennyspodcast",
+    "booksGenerated": 38,
+    "guest": {
+      "id": "guest-002",
+      "name": "Claire Hughes Johnson",
+      "title": "Corporate Officer & Advisor",
+      "company": "Stripe",
+      "bio": "Claire Hughes Johnson spent over a decade at Google before joining Stripe as COO. She's the author of 'Scaling People' and is known for her expertise in building and scaling high-performing organizations.",
+      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+      "linkedIn": "https://linkedin.com/in/clairehughesjohnson",
+      "twitter": "@chaboryk"
+    }
+  },
+  {
+    "id": "ep-003",
+    "episodeNumber": 142,
+    "title": "How to Ship Fast and Win",
+    "description": "Keith Rabois shares his frameworks for building companies that move fast, make decisions quickly, and outpace the competition.",
+    "publishDate": "2023-12-18",
+    "duration": "1h 08m",
+    "guestId": "guest-003",
+    "featuredQuote": "Speed is a competitive advantage. The company that ships faster learns faster, and the company that learns faster wins.",
+    "quoteTimestamp": "15:33",
+    "topics": [
+      "Strategy",
+      "Growth",
+      "Engineering",
+      "Startups"
+    ],
+    "transcriptPath": "transcripts/ep-142.txt",
+    "spotifyUrl": "https://open.spotify.com/show/lennyspodcast",
+    "youtubeUrl": "https://youtube.com/lennyspodcast",
+    "booksGenerated": 27,
+    "guest": {
+      "id": "guest-003",
+      "name": "Keith Rabois",
+      "title": "General Partner",
+      "company": "Khosla Ventures",
+      "bio": "Keith Rabois is a legendary Silicon Valley operator and investor. He was an early executive at PayPal, LinkedIn, and Square, and is known for his frameworks on building companies that ship fast.",
+      "photoUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+      "linkedIn": "https://linkedin.com/in/rabois",
+      "twitter": "@rabois"
+    }
+  },
+  {
+    "id": "1768689850037-2erlal6",
+    "episodeNumber": 1,
+    "title": "Building Airbnb from Air Mattresses to 80B",
+    "description": "Brian Chesky shares the origin story of Airbnb.",
+    "publishDate": "2024-01-15",
+    "duration": "1h 25m",
+    "guestId": "1768689850036-2ym28j4",
+    "featuredQuote": "The best way to predict the future is to design it.",
+    "quoteTimestamp": "45:30",
+    "topics": [
+      "Product",
+      "Leadership",
+      "Startups"
+    ],
+    "transcriptPath": "transcripts/ep-001.txt",
+    "booksGenerated": 0
+  }
+]

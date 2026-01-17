@@ -1,0 +1,43 @@
+Lenny: Welcome back to Lenny's Podcast. Today I'm thrilled to have Brian Chesky, co-founder and CEO of Airbnb. Brian, thanks for being here.
+
+Brian: Thanks for having me, Lenny. I'm excited to chat.
+
+Lenny: Let's dive right in. You've talked a lot about "Founder Mode" and getting deeply involved in product decisions. Can you explain what that means?
+
+Brian: Sure. So for years, the conventional wisdom was that as a company scales, the founder should step back and hire professional managers to run things. Delegate everything. But I found that when I did that at Airbnb, we lost our edge. The products became mediocre. We were shipping features that didn't feel magical.
+
+So I made a decision to get deeply involved again. Not micromanaging, but being obsessed with the details that matter. The best products are built by people who care deeply about every pixel, every interaction, every word.
+
+Lenny: That's fascinating. How do you balance that with empowering your team?
+
+Brian: Great question. It's not about doing everyone's job. It's about setting an incredibly high bar and creating a culture where excellence is the expectation. I review designs personally. I use our product constantly. I talk to hosts and guests every week.
+
+The magic happens when your team sees that level of care and raises their own standards. You can't delegate taste. You can't delegate culture. Those have to come from the founder.
+
+Lenny: Let's talk about the famous "Snow White" meeting. Can you tell us about that?
+
+Brian: Yes! So in 2014, we had this pivotal moment where we storyboarded the entire Airbnb experience like a Pixar movie. We called it our Snow White project because Disney used storyboards to create emotional journeys.
+
+We mapped out every single touchpoint - from the moment someone thinks about taking a trip to the moment they get home. We found 45 different moments, and we asked: how do we make each one 10 times better?
+
+This changed everything. We stopped thinking about features and started thinking about experiences. We asked: what would make this moment so good that someone would tell their friends about it?
+
+Lenny: That's amazing. What advice would you give to founders who want to stay close to the product?
+
+Brian: A few things. First, use your own product constantly. I book Airbnbs all the time. I host. I talk to customers weekly. You need to feel the pain points yourself.
+
+Second, don't just review the finished product - be involved in the creative process. Join the brainstorms. Look at early concepts. The decisions made in those early stages determine 80% of the outcome.
+
+Third, create rituals. We have weekly design reviews where I look at every major feature. It sends a signal that design quality matters.
+
+And finally, remember that your job isn't to have all the answers. Your job is to ask the right questions and push for higher standards. When you see something that's just "okay," push back. Ask: could this be great?
+
+Lenny: This is gold. Any final thoughts?
+
+Brian: Just that building great products is really about caring more than anyone else. It's about being obsessed with making things better. When you lose that obsession, you lose your magic.
+
+The companies that win are the ones where the founder never stops caring about the details. Never delegate taste. Never delegate culture. Those are the things that make a company special.
+
+Lenny: Brian, this has been incredible. Thank you so much for sharing your wisdom.
+
+Brian: Thanks, Lenny. Great conversation.

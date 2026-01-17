@@ -1,0 +1,55 @@
+Lenny: I'm excited to welcome Keith Rabois to the podcast. Keith has been an executive at PayPal, LinkedIn, Square, and is now a GP at Khosla Ventures. Keith, thanks for joining!
+
+Keith: Thanks Lenny. Happy to be here.
+
+Lenny: You're famous for your frameworks on building companies that move fast. Let's start there - why is speed so important?
+
+Keith: Speed is probably the most underrated competitive advantage in startups. Here's the math: if you ship twice as fast as your competitor, you get twice as many iterations. More iterations means more learning. More learning means better products. It compounds.
+
+The companies that win are almost always the fastest ones. Not because they have the best ideas at the start, but because they learn and adapt faster.
+
+Lenny: How do you actually make a company move faster?
+
+Keith: A few principles. First, reduce the number of people involved in decisions. Every additional person in a meeting slows things down. Ideally, decisions are made by one person with context, not committees.
+
+Second, set aggressive deadlines. Parkinson's Law is real - work expands to fill the time available. If you give a team a month, it takes a month. If you give them a week, they figure it out in a week.
+
+Third, eliminate blockers ruthlessly. Every morning, ask your team: what's stopping you from shipping today? Then remove those obstacles.
+
+Lenny: What about quality? Doesn't moving fast mean shipping bugs?
+
+Keith: This is a false tradeoff. Speed and quality are correlated, not opposed. Here's why: when you ship fast, you get feedback fast. You find problems fast. You fix them fast.
+
+The companies that ship slowly are usually the ones with the most bugs because they build for months without real user feedback. Then they launch and everything breaks because they built on wrong assumptions.
+
+Ship fast, fix fast. That's the model.
+
+Lenny: Tell me about your "barrels and ammunition" framework.
+
+Keith: This is one of my favorites. In any company, you have two types of people: barrels and ammunition. Ammunition are talented people who can execute well. Barrels are people who can take an idea from start to finish - they can scope a project, build a team, ship the product, and measure success.
+
+Most companies have plenty of ammunition but few barrels. The constraint on company growth is usually the number of barrels, not the number of talented people.
+
+When you find a barrel, protect them. Give them resources. Let them run. They're 10x more valuable than someone who can only execute one piece of a project.
+
+Lenny: How do you identify barrels?
+
+Keith: Give people progressively larger scope and see how they do. Start with a small project. If they nail it, give them something bigger. Keep expanding until you find their limit.
+
+Barrels share some traits: they're extremely reliable, they communicate proactively, they anticipate problems, and they have a bias for action. They don't wait for permission - they just do things.
+
+Lenny: Any advice for founders on making decisions faster?
+
+Keith: Two things. First, understand which decisions are reversible and which aren't. For reversible decisions, decide quickly and move on. You can always change course. Only agonize over truly irreversible choices.
+
+Second, avoid consensus-seeking. You don't need everyone to agree. You need the right person to make the call. Disagree and commit is a powerful concept - debate, decide, then everyone executes.
+
+The best founders I know make 10 decisions before lunch. The worst ones schedule meetings to discuss decisions.
+
+Lenny: This is amazing. Final thoughts?
+
+Keith: Just this: momentum is everything. When a company is moving fast, everything feels possible. When it's moving slow, everything feels hard. Choose speed. The cost of being wrong is usually lower than the cost of being slow.
+
+Lenny: Keith, thank you so much!
+
+Keith: Thanks Lenny. Great chat.

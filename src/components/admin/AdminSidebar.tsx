@@ -7,7 +7,6 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/episodes', label: 'Episodes', icon: '🎙️' },
   { href: '/admin/episodes/bulk-upload', label: 'Bulk Upload', icon: '📁' },
-  { href: '/admin/guests', label: 'Guests', icon: '👤' },
 ];
 
 export default function AdminSidebar() {

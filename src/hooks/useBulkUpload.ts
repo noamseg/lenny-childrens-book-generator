@@ -205,6 +205,18 @@ export function useBulkUpload(): UseBulkUploadReturn {
                   ));
                   break;
 
+                case 'item_skipped':
+                  setItems(prev => prev.map(item =>
+                    item.id === event.itemId
+                      ? {
+                          ...item,
+                          status: 'skipped' as const,
+                          error: event.reason,
+                        }
+                      : item
+                  ));
+                  break;
+
                 case 'all_complete':
                   setProgress(null);
                   setPhase('review');

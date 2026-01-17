@@ -20,6 +20,7 @@ export default function AnalysisProgress({
 }: AnalysisProgressProps) {
   const completedCount = items.filter(i => i.status === 'completed').length;
   const errorCount = items.filter(i => i.status === 'error').length;
+  const skippedCount = items.filter(i => i.status === 'skipped').length;
   const analyzingCount = items.filter(i => i.status === 'analyzing').length;
 
   const progressPercent = progress
@@ -53,7 +54,7 @@ export default function AnalysisProgress({
           </>
         )}
 
-        <div className="flex justify-center gap-8 mb-6">
+        <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
             <p className="text-2xl font-bold text-green-600">{completedCount}</p>
             <p className="text-sm text-gray-500">Completed</p>
@@ -61,6 +62,10 @@ export default function AnalysisProgress({
           <div className="text-center">
             <p className="text-2xl font-bold text-blue-600">{analyzingCount}</p>
             <p className="text-sm text-gray-500">Analyzing</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-yellow-600">{skippedCount}</p>
+            <p className="text-sm text-gray-500">Skipped</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-red-600">{errorCount}</p>
@@ -84,6 +89,7 @@ export default function AnalysisProgress({
                 className={`flex items-center justify-between py-2 px-3 rounded-lg ${
                   item.status === 'completed' ? 'bg-green-50' :
                   item.status === 'error' ? 'bg-red-50' :
+                  item.status === 'skipped' ? 'bg-yellow-50' :
                   item.status === 'analyzing' ? 'bg-blue-50' :
                   'bg-gray-50'
                 }`}
@@ -92,6 +98,7 @@ export default function AnalysisProgress({
                   <span className="text-lg">
                     {item.status === 'completed' ? '✅' :
                      item.status === 'error' ? '❌' :
+                     item.status === 'skipped' ? '⏭️' :
                      item.status === 'analyzing' ? '⏳' :
                      '⏸️'}
                   </span>
@@ -111,6 +118,11 @@ export default function AnalysisProgress({
                   )}
                   {item.status === 'error' && (
                     <span className="text-xs text-red-600">
+                      {item.error}
+                    </span>
+                  )}
+                  {item.status === 'skipped' && (
+                    <span className="text-xs text-yellow-600">
                       {item.error}
                     </span>
                   )}

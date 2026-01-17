@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { verifyAuthFromRequest } from '@/lib/admin-auth';
-import { getGuests } from '@/lib/lenny-data';
+import { getGuests, getEpisodes } from '@/lib/lenny-data';
 import { AnalyzeRequest, TranscriptAnalysisResult, SSEEvent } from '@/types/bulk-upload';
 import {
   BULK_ANALYSIS_SYSTEM_PROMPT,
@@ -10,16 +10,56 @@ import {
 
 const anthropic = new Anthropic();
 
-// Batch configuration
-const BATCH_SIZE = 5;
-const BATCH_DELAY_MS = 2000;
+// Rate limit configuration - be conservative
+const DELAY_BETWEEN_REQUESTS_MS = 3000; // 3 seconds between each request
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY_MS = 5000; // 5 seconds initial retry delay
 
 function createSSEMessage(event: SSEEvent): string {
   return `data: ${JSON.stringify(event)}\n\n`;
 }
 
+// Sleep helper
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Retry with exponential backoff
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = MAX_RETRIES,
+  initialDelay: number = INITIAL_RETRY_DELAY_MS
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      // Check if it's a rate limit error (429) or overloaded (529)
+      const isRateLimitError =
+        lastError.message.includes('429') ||
+        lastError.message.includes('rate') ||
+        lastError.message.includes('overloaded') ||
+        lastError.message.includes('529');
+
+      if (attempt < maxRetries && isRateLimitError) {
+        const delay = initialDelay * Math.pow(2, attempt); // Exponential backoff
+        console.log(`Rate limited, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})`);
+        await sleep(delay);
+      } else if (!isRateLimitError) {
+        // Non-rate-limit error, don't retry
+        throw lastError;
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 async function analyzeTranscript(
-  id: string,
   fileName: string,
   content: string,
   existingGuests: Awaited<ReturnType<typeof getGuests>>
@@ -30,16 +70,18 @@ async function analyzeTranscript(
     existingGuests,
   });
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 2048,
-    system: BULK_ANALYSIS_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: 'user',
-        content: prompt,
-      },
-    ],
+  const message = await withRetry(async () => {
+    return anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2048,
+      system: BULK_ANALYSIS_SYSTEM_PROMPT,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    });
   });
 
   // Extract text content from the response
@@ -113,68 +155,88 @@ export async function POST(request: Request) {
   // Get existing guests for matching
   const existingGuests = await getGuests();
 
+  // Get existing episodes for duplicate detection
+  const existingEpisodes = await getEpisodes();
+  const existingEpisodeNumbers = new Set(existingEpisodes.map(ep => ep.episodeNumber));
+
   // Create a ReadableStream for SSE
   const stream = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder();
       let successCount = 0;
       let errorCount = 0;
+      let skippedCount = 0;
 
-      // Process items in batches
-      for (let i = 0; i < body.items.length; i += BATCH_SIZE) {
-        const batch = body.items.slice(i, i + BATCH_SIZE);
+      // Process items SEQUENTIALLY (one at a time) to avoid rate limits
+      for (let i = 0; i < body.items.length; i++) {
+        const item = body.items[i];
+        const globalIndex = i + 1;
 
-        // Process batch items in parallel
-        const batchPromises = batch.map(async (item, batchIndex) => {
-          const globalIndex = i + batchIndex + 1;
+        // Send progress event
+        const progressEvent: SSEEvent = {
+          type: 'progress',
+          current: globalIndex,
+          total: body.items.length,
+          fileName: item.fileName,
+        };
+        controller.enqueue(encoder.encode(createSSEMessage(progressEvent)));
 
-          // Send progress event
-          const progressEvent: SSEEvent = {
-            type: 'progress',
-            current: globalIndex,
-            total: body.items.length,
-            fileName: item.fileName,
+        // Check for duplicates based on episode number from filename
+        const episodeNumberFromFilename = parseEpisodeNumberFromFilename(item.fileName);
+        if (episodeNumberFromFilename && existingEpisodeNumbers.has(episodeNumberFromFilename)) {
+          skippedCount++;
+
+          const skippedEvent: SSEEvent = {
+            type: 'item_skipped',
+            itemId: item.id,
+            reason: `Episode #${episodeNumberFromFilename} already exists`,
+            episodeNumber: episodeNumberFromFilename,
           };
-          controller.enqueue(encoder.encode(createSSEMessage(progressEvent)));
+          controller.enqueue(encoder.encode(createSSEMessage(skippedEvent)));
 
-          try {
-            const { analysis, matchedGuestId } = await analyzeTranscript(
-              item.id,
-              item.fileName,
-              item.content,
-              existingGuests
-            );
+          // Small delay even for skipped items
+          await sleep(100);
+          continue;
+        }
 
-            successCount++;
+        try {
+          const { analysis, matchedGuestId } = await analyzeTranscript(
+            item.fileName,
+            item.content,
+            existingGuests
+          );
 
-            // Send item complete event
-            const completeEvent: SSEEvent = {
-              type: 'item_complete',
-              itemId: item.id,
-              analysis,
-              matchedGuestId,
-            };
-            controller.enqueue(encoder.encode(createSSEMessage(completeEvent)));
-          } catch (error) {
-            errorCount++;
-            console.error(`Error analyzing ${item.fileName}:`, error);
+          successCount++;
 
-            // Send item error event
-            const errorEvent: SSEEvent = {
-              type: 'item_error',
-              itemId: item.id,
-              error: error instanceof Error ? error.message : 'Unknown error',
-            };
-            controller.enqueue(encoder.encode(createSSEMessage(errorEvent)));
+          // Track this episode number to prevent duplicates within same batch
+          if (analysis.episodeNumber) {
+            existingEpisodeNumbers.add(analysis.episodeNumber);
           }
-        });
 
-        // Wait for all items in batch to complete
-        await Promise.all(batchPromises);
+          // Send item complete event
+          const completeEvent: SSEEvent = {
+            type: 'item_complete',
+            itemId: item.id,
+            analysis,
+            matchedGuestId,
+          };
+          controller.enqueue(encoder.encode(createSSEMessage(completeEvent)));
+        } catch (error) {
+          errorCount++;
+          console.error(`Error analyzing ${item.fileName}:`, error);
 
-        // Add delay between batches to avoid rate limiting (except for last batch)
-        if (i + BATCH_SIZE < body.items.length) {
-          await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS));
+          // Send item error event
+          const errorEvent: SSEEvent = {
+            type: 'item_error',
+            itemId: item.id,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          };
+          controller.enqueue(encoder.encode(createSSEMessage(errorEvent)));
+        }
+
+        // Add delay between requests to avoid rate limiting (except for last item)
+        if (i < body.items.length - 1) {
+          await sleep(DELAY_BETWEEN_REQUESTS_MS);
         }
       }
 
@@ -183,6 +245,7 @@ export async function POST(request: Request) {
         type: 'all_complete',
         successful: successCount,
         failed: errorCount,
+        skipped: skippedCount,
       };
       controller.enqueue(encoder.encode(createSSEMessage(allCompleteEvent)));
 

@@ -1,6 +1,6 @@
 // Bulk Upload Types for Episode Import with AI Analysis
 
-export type BulkUploadItemStatus = 'pending' | 'analyzing' | 'completed' | 'error' | 'imported';
+export type BulkUploadItemStatus = 'pending' | 'analyzing' | 'completed' | 'error' | 'imported' | 'skipped';
 
 export interface TranscriptAnalysisResult {
   episodeNumber: number | null;
@@ -49,13 +49,21 @@ export interface SSEItemErrorEvent {
   error: string;
 }
 
+export interface SSEItemSkippedEvent {
+  type: 'item_skipped';
+  itemId: string;
+  reason: string;
+  episodeNumber: number;
+}
+
 export interface SSEAllCompleteEvent {
   type: 'all_complete';
   successful: number;
   failed: number;
+  skipped: number;
 }
 
-export type SSEEvent = SSEProgressEvent | SSEItemCompleteEvent | SSEItemErrorEvent | SSEAllCompleteEvent;
+export type SSEEvent = SSEProgressEvent | SSEItemCompleteEvent | SSEItemErrorEvent | SSEItemSkippedEvent | SSEAllCompleteEvent;
 
 // API Request/Response Types
 export interface AnalyzeRequest {

@@ -13,7 +13,7 @@ export default async function EpisodesPage() {
             Episodes
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage Lenny Podcast episodes
+            Manage Lenny's Podcast episodes
           </p>
         </div>
         <div className="flex gap-3">
@@ -37,7 +37,7 @@ export default async function EpisodesPage() {
           <span className="text-6xl block mb-4">🎙️</span>
           <h3 className="font-display text-xl font-bold mb-2">No episodes yet</h3>
           <p className="text-gray-600 mb-4">
-            Add your first Lenny Podcast episode to get started.
+            Add your first Lenny's Podcast episode to get started.
           </p>
           <Link href="/admin/episodes/new">
             <Button>Add First Episode</Button>

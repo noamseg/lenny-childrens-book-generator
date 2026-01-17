@@ -217,7 +217,7 @@ function CreatePageContent() {
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-primary-600 font-medium">
-                    Creating from Lenny Podcast Episode #{episode.episodeNumber}
+                    Creating from Lenny's Podcast Episode #{episode.episodeNumber}
                   </p>
                   <p className="font-display font-bold text-gray-900 truncate">
                     {episode.title}
@@ -296,7 +296,7 @@ function CreatePageContent() {
                     href="/discover"
                     className="inline-block mt-3 text-primary-600 hover:text-primary-700 text-sm font-medium"
                   >
-                    Or browse Lenny Podcast episodes →
+                    Or browse Lenny's Podcast episodes →
                   </Link>
                 </div>
 

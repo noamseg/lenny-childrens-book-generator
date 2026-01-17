@@ -1,4 +1,4 @@
-// Lenny Podcast Episode & Guest Types
+// Lenny's Podcast Episode & Guest Types
 
 export interface LennyGuest {
   id: string;

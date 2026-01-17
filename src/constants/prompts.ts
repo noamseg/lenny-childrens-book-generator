@@ -80,7 +80,7 @@ Please create a ${pageCount}-page children's book story that:
 5. Each page should have 2-3 sentences maximum
 6. Include a descriptive image prompt for each page that can be used to generate illustrations
 7. IMPORTANT: Include 2-3 subtle tech/developer jokes or references that parents will appreciate (e.g., a helpful "bug" character, going to "The Cloud", a "Debug Dragon", "shipping" an adventure, etc.) - these should be fun for kids too!
-${additionalContext ? `8. Since this is from a Lenny Podcast episode, subtly weave in product/business wisdom as magical lessons the child learns on their adventure` : ''}
+${additionalContext ? `8. Since this is from a Lenny's Podcast episode, subtly weave in product/business wisdom as magical lessons the child learns on their adventure` : ''}
 
 Respond ONLY with a JSON object in this exact format:
 {

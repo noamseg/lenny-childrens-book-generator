@@ -42,14 +42,14 @@ export default function HomePage() {
 
         <Container size="lg">
           <div className="text-center max-w-4xl mx-auto">
-            {/* Lenny Podcast badge */}
+            {/* Lenny's Podcast badge */}
             <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <span>🎙️</span>
-              <span>Powered by Lenny Podcast</span>
+              <span>Powered by Lenny's Podcast</span>
             </div>
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Turn Lenny Podcast Episodes Into{' '}
+              Turn Lenny's Podcast Episodes Into{' '}
               <span className="gradient-text">Magical Children&apos;s Books</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-2xl mx-auto">
@@ -158,7 +158,7 @@ export default function HomePage() {
               <div className="text-xs font-bold text-primary-500 mb-1">STEP 1</div>
               <h3 className="font-display text-lg font-bold mb-2">Choose Episode</h3>
               <p className="text-gray-600 text-sm">
-                Pick a Lenny Podcast episode or upload your own transcript
+                Pick a Lenny's Podcast episode or upload your own transcript
               </p>
             </Card>
 
@@ -198,13 +198,13 @@ export default function HomePage() {
                 Built for Product Parents
               </div>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">
-                Stories Kids Love, With Jokes Parents Get
+                Stories Kids Love, With Jokes Tech Parents Get
               </h2>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">🎙️</span>
                   <div>
-                    <strong className="text-gray-900">Lenny Podcast Magic</strong>
+                    <strong className="text-gray-900">Lenny's Podcast Magic</strong>
                     <p className="text-gray-600">
                       Transform wisdom from product leaders like Brian Chesky, Claire Hughes Johnson, and more
                     </p>

@@ -25,7 +25,8 @@ export function useLocalStorage<T>(
       console.warn(`Error reading localStorage key "${key}":`, error);
     }
     setIsInitialized(true);
-  }, [key, initialValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]); // initialValue intentionally excluded - it's a default, not a reactive dependency
 
   // Update localStorage when value changes
   const setValue = useCallback(
@@ -57,7 +58,8 @@ export function useLocalStorage<T>(
     } catch (error) {
       console.warn(`Error removing localStorage key "${key}":`, error);
     }
-  }, [key, initialValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]); // initialValue intentionally excluded
 
   return [isInitialized ? storedValue : initialValue, setValue, removeValue];
 }
@@ -85,7 +87,25 @@ export function useRecentBooks() {
   >('recent-books', []);
 }
 
+// Module-level variable for generated book - survives navigation, cleared on page refresh
+// This avoids localStorage quota issues with large book objects
+let generatedBookCache: Book | null = null;
+
 // Hook for storing the currently generated book (for preview page)
-export function useGeneratedBook() {
-  return useLocalStorage<Book | null>('generated-book', null);
+// Returns [book, setBook, clearBook, isReady]
+export function useGeneratedBook(): [Book | null, (value: Book | null) => void, () => void, boolean] {
+  const [book, setBook] = useState<Book | null>(generatedBookCache);
+
+  const setValue = useCallback((value: Book | null) => {
+    generatedBookCache = value;
+    setBook(value);
+  }, []);
+
+  const clearValue = useCallback(() => {
+    generatedBookCache = null;
+    setBook(null);
+  }, []);
+
+  // Always ready since we're using module-level storage (no async loading)
+  return [book, setValue, clearValue, true];
 }

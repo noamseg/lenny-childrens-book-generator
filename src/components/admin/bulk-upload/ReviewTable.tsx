@@ -5,6 +5,76 @@ import { Card, Button } from '@/components/ui';
 import { BulkUploadItem, TranscriptAnalysisResult } from '@/types/bulk-upload';
 import { LennyGuest, LENNY_TOPICS } from '@/types/lenny';
 
+// Expandable book content preview component
+function BookContentPreview({ analysis }: { analysis: TranscriptAnalysisResult }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const hasContent = (analysis.coreLessons?.length || 0) > 0 ||
+    (analysis.memorableStories?.length || 0) > 0 ||
+    (analysis.quotableMoments?.length || 0) > 0;
+
+  if (!hasContent) {
+    return <span className="text-gray-400 text-xs">No book content</span>;
+  }
+
+  return (
+    <div className="text-xs">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+      >
+        {expanded ? 'Hide' : 'Preview'} Book Content
+        <span className="text-gray-400">
+          ({analysis.coreLessons?.length || 0}L, {analysis.memorableStories?.length || 0}S, {analysis.quotableMoments?.length || 0}Q)
+        </span>
+      </button>
+      {expanded && (
+        <div className="mt-2 space-y-2 bg-gray-50 p-2 rounded border border-gray-200">
+          {analysis.coreLessons && analysis.coreLessons.length > 0 && (
+            <div>
+              <p className="font-medium text-gray-700">Core Lessons:</p>
+              <ul className="list-disc list-inside text-gray-600 ml-1">
+                {analysis.coreLessons.slice(0, 3).map((lesson, i) => (
+                  <li key={i} className="truncate" title={lesson}>{lesson}</li>
+                ))}
+                {analysis.coreLessons.length > 3 && (
+                  <li className="text-gray-400">+{analysis.coreLessons.length - 3} more...</li>
+                )}
+              </ul>
+            </div>
+          )}
+          {analysis.memorableStories && analysis.memorableStories.length > 0 && (
+            <div>
+              <p className="font-medium text-gray-700">Stories:</p>
+              <ul className="list-disc list-inside text-gray-600 ml-1">
+                {analysis.memorableStories.slice(0, 2).map((story, i) => (
+                  <li key={i} className="truncate" title={story}>{story}</li>
+                ))}
+                {analysis.memorableStories.length > 2 && (
+                  <li className="text-gray-400">+{analysis.memorableStories.length - 2} more...</li>
+                )}
+              </ul>
+            </div>
+          )}
+          {analysis.quotableMoments && analysis.quotableMoments.length > 0 && (
+            <div>
+              <p className="font-medium text-gray-700">Quotes:</p>
+              <ul className="list-disc list-inside text-gray-600 ml-1">
+                {analysis.quotableMoments.slice(0, 2).map((quote, i) => (
+                  <li key={i} className="truncate" title={quote}>&ldquo;{quote}&rdquo;</li>
+                ))}
+                {analysis.quotableMoments.length > 2 && (
+                  <li className="text-gray-400">+{analysis.quotableMoments.length - 2} more...</li>
+                )}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface ReviewTableProps {
   items: BulkUploadItem[];
   onUpdateItem: (id: string, updates: Partial<BulkUploadItem>) => void;
@@ -145,11 +215,10 @@ export default function ReviewTable({
                       className="rounded border-gray-300"
                     />
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Ep #</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Title</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Guest</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Topics</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Duration</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-900">Book Content</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Confidence</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-900">Actions</th>
                 </tr>
@@ -169,20 +238,6 @@ export default function ReviewTable({
                         onChange={() => handleToggleSelect(item.id)}
                         className="rounded border-gray-300"
                       />
-                    </td>
-                    <td className="px-4 py-3">
-                      {editingItem === item.id ? (
-                        <input
-                          type="number"
-                          value={item.analysis?.episodeNumber || ''}
-                          onChange={(e) => handleUpdateAnalysis(item.id, 'episodeNumber', parseInt(e.target.value) || null)}
-                          className="w-16 px-2 py-1 border rounded text-sm"
-                        />
-                      ) : (
-                        <span className="font-medium">
-                          {item.analysis?.episodeNumber || '-'}
-                        </span>
-                      )}
                     </td>
                     <td className="px-4 py-3 max-w-xs">
                       {editingItem === item.id ? (
@@ -289,8 +344,8 @@ export default function ReviewTable({
                         </div>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
-                      {item.analysis?.estimatedDuration}
+                    <td className="px-4 py-3">
+                      {item.analysis && <BookContentPreview analysis={item.analysis} />}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 text-xs rounded-full ${

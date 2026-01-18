@@ -5,7 +5,7 @@ import { AnalyzeRequest, TranscriptAnalysisResult, SSEEvent } from '@/types/bulk
 import {
   BULK_ANALYSIS_SYSTEM_PROMPT,
   formatAnalysisPrompt,
-  parseEpisodeNumberFromFilename,
+  parseGuestNameFromFilename,
 } from '@/constants/bulk-analysis-prompts';
 
 const anthropic = new Anthropic();
@@ -105,23 +105,28 @@ async function analyzeTranscript(
     ? analysisData.matchedGuestId
     : null;
 
-  // Use parsed episode number from filename if AI couldn't determine
-  const episodeNumber = analysisData.episodeNumber ?? parseEpisodeNumberFromFilename(fileName);
+  // Guest name comes from filename (authoritative source)
+  const guestNameFromFilename = parseGuestNameFromFilename(fileName);
+  const guestName = guestNameFromFilename || analysisData.guestName || null;
 
-  // Build the analysis result
+  // Build the analysis result with book content fields
   const analysis: TranscriptAnalysisResult = {
-    episodeNumber,
+    // episodeNumber is now optional - not extracted from filename
     title: analysisData.title || 'Untitled Episode',
     description: analysisData.description || '',
     featuredQuote: analysisData.featuredQuote || '',
     quoteTimestamp: analysisData.quoteTimestamp || null,
     topics: Array.isArray(analysisData.topics) ? analysisData.topics : [],
     estimatedDuration: analysisData.estimatedDuration || '1h 0m',
-    guestName: analysisData.guestName || null,
+    guestName,
     guestTitle: analysisData.guestTitle || null,
     guestCompany: analysisData.guestCompany || null,
     confidence: analysisData.confidence || 'medium',
     warnings: Array.isArray(analysisData.warnings) ? analysisData.warnings : [],
+    // Children's book content extraction
+    coreLessons: Array.isArray(analysisData.coreLessons) ? analysisData.coreLessons : [],
+    memorableStories: Array.isArray(analysisData.memorableStories) ? analysisData.memorableStories : [],
+    quotableMoments: Array.isArray(analysisData.quotableMoments) ? analysisData.quotableMoments : [],
   };
 
   return { analysis, matchedGuestId };
@@ -155,9 +160,13 @@ export async function POST(request: Request) {
   // Get existing guests for matching
   const existingGuests = await getGuests();
 
-  // Get existing episodes for duplicate detection
+  // Get existing episodes for duplicate detection by guest name
   const existingEpisodes = await getEpisodes();
-  const existingEpisodeNumbers = new Set(existingEpisodes.map(ep => ep.episodeNumber));
+  const existingGuestNames = new Set(
+    existingEpisodes
+      .filter(ep => ep.guest?.name)
+      .map(ep => ep.guest!.name.toLowerCase())
+  );
 
   // Create a ReadableStream for SSE
   const stream = new ReadableStream({
@@ -181,16 +190,16 @@ export async function POST(request: Request) {
         };
         controller.enqueue(encoder.encode(createSSEMessage(progressEvent)));
 
-        // Check for duplicates based on episode number from filename
-        const episodeNumberFromFilename = parseEpisodeNumberFromFilename(item.fileName);
-        if (episodeNumberFromFilename && existingEpisodeNumbers.has(episodeNumberFromFilename)) {
+        // Check for duplicates based on guest name from filename
+        const guestNameFromFilename = parseGuestNameFromFilename(item.fileName);
+        if (guestNameFromFilename && existingGuestNames.has(guestNameFromFilename.toLowerCase())) {
           skippedCount++;
 
           const skippedEvent: SSEEvent = {
             type: 'item_skipped',
             itemId: item.id,
-            reason: `Episode #${episodeNumberFromFilename} already exists`,
-            episodeNumber: episodeNumberFromFilename,
+            reason: `Episode with guest "${guestNameFromFilename}" already exists`,
+            guestName: guestNameFromFilename,
           };
           controller.enqueue(encoder.encode(createSSEMessage(skippedEvent)));
 
@@ -208,9 +217,9 @@ export async function POST(request: Request) {
 
           successCount++;
 
-          // Track this episode number to prevent duplicates within same batch
-          if (analysis.episodeNumber) {
-            existingEpisodeNumbers.add(analysis.episodeNumber);
+          // Track this guest name to prevent duplicates within same batch
+          if (analysis.guestName) {
+            existingGuestNames.add(analysis.guestName.toLowerCase());
           }
 
           // Send item complete event

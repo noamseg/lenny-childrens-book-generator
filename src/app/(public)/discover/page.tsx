@@ -120,10 +120,10 @@ export default function DiscoverPage() {
           {/* Header section */}
           <div className="text-center mb-8">
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">Discover Lenny's Podcast Episodes</span>
+              <span className="gradient-text">Discover Lenny&apos;s Podcast Episodes</span>
             </h1>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Turn your favorite Lenny's Podcast episodes into magical personalized
+              Turn your favorite Lenny&apos;s Podcast episodes into magical personalized
               children&apos;s books starring your little one.
             </p>
           </div>

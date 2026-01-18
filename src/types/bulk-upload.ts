@@ -3,7 +3,7 @@
 export type BulkUploadItemStatus = 'pending' | 'analyzing' | 'completed' | 'error' | 'imported' | 'skipped';
 
 export interface TranscriptAnalysisResult {
-  episodeNumber: number | null;
+  episodeNumber?: number | null;  // Optional - auto-generated if not provided
   title: string;
   description: string;
   featuredQuote: string;
@@ -15,6 +15,10 @@ export interface TranscriptAnalysisResult {
   guestCompany: string | null;
   confidence: 'high' | 'medium' | 'low';
   warnings: string[];
+  // Children's book content extraction
+  coreLessons: string[];      // Key frameworks, mental models, takeaways
+  memorableStories: string[]; // Anecdotes that could become book narratives
+  quotableMoments: string[];  // Punchy quotes for illustrations/callouts
 }
 
 export interface BulkUploadItem {
@@ -53,7 +57,7 @@ export interface SSEItemSkippedEvent {
   type: 'item_skipped';
   itemId: string;
   reason: string;
-  episodeNumber: number;
+  guestName: string;  // Changed from episodeNumber - duplicates detected by guest name
 }
 
 export interface SSEAllCompleteEvent {
@@ -76,7 +80,7 @@ export interface AnalyzeRequest {
 
 export interface ImportItem {
   id: string;
-  episodeNumber: number;
+  episodeNumber?: number;  // Optional - auto-generated if not provided
   title: string;
   description: string;
   publishDate: string;
@@ -92,6 +96,10 @@ export interface ImportItem {
   quoteTimestamp: string;
   topics: string[];
   transcriptContent: string;
+  // Children's book content
+  coreLessons: string[];
+  memorableStories: string[];
+  quotableMoments: string[];
 }
 
 export interface ImportRequest {

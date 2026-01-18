@@ -266,7 +266,8 @@ export function useBulkUpload(): UseBulkUploadReturn {
     try {
       const importItems: ImportItem[] = selectedItems.map(item => ({
         id: item.id,
-        episodeNumber: item.analysis!.episodeNumber || 0,
+        // episodeNumber is now optional - will be auto-generated if not provided
+        episodeNumber: item.analysis!.episodeNumber || undefined,
         title: item.analysis!.title,
         description: item.analysis!.description,
         publishDate: new Date().toISOString().split('T')[0],
@@ -282,6 +283,10 @@ export function useBulkUpload(): UseBulkUploadReturn {
         quoteTimestamp: item.analysis!.quoteTimestamp || '',
         topics: item.analysis!.topics,
         transcriptContent: item.transcriptContent,
+        // Children's book content
+        coreLessons: item.analysis!.coreLessons || [],
+        memorableStories: item.analysis!.memorableStories || [],
+        quotableMoments: item.analysis!.quotableMoments || [],
       }));
 
       const response = await fetch('/api/admin/bulk-upload/import', {

@@ -25,7 +25,7 @@ export default function Header() {
                 Lenny&apos;s Books
               </span>
               <span className="text-[10px] text-gray-400 -mt-0.5 hidden sm:block">
-                Powered by Lenny's Podcast
+                Powered by Lenny&apos;s Podcast
               </span>
             </div>
           </Link>

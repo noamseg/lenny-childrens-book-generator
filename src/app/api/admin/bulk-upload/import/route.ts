@@ -20,9 +20,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No items provided' }, { status: 400 });
   }
 
-  // Get existing episodes to check for duplicates
+  // Get existing episodes to auto-generate episode numbers
   const existingEpisodes = await getEpisodes();
-  const existingEpisodeNumbers = new Set(existingEpisodes.map(ep => ep.episodeNumber));
+  // Find max episode number for auto-generation
+  let maxEpisodeNumber = existingEpisodes.reduce(
+    (max, ep) => Math.max(max, ep.episodeNumber || 0),
+    0
+  );
+  // Track guest names for duplicate detection
+  const existingGuestNames = new Set(
+    existingEpisodes
+      .filter(ep => ep.guest?.name)
+      .map(ep => ep.guest!.name.toLowerCase())
+  );
 
   const result: ImportResult = {
     imported: 0,
@@ -34,14 +44,18 @@ export async function POST(request: Request) {
 
   // Process each item
   for (const item of body.items) {
+    // Determine guest name for duplicate checking and logging
+    const guestName = item.newGuestData?.name ||
+      (item.guestId ? existingEpisodes.find(ep => ep.guestId === item.guestId)?.guest?.name : null);
+
     try {
-      // Check for duplicate episode number
-      if (existingEpisodeNumbers.has(item.episodeNumber)) {
+      // Check for duplicate by guest name
+      if (guestName && existingGuestNames.has(guestName.toLowerCase())) {
         result.skipped++;
         result.errors.push({
           id: item.id,
-          fileName: `Episode #${item.episodeNumber}`,
-          error: `Episode #${item.episodeNumber} already exists`,
+          fileName: guestName,
+          error: `Episode with guest "${guestName}" already exists`,
         });
         continue;
       }
@@ -50,13 +64,13 @@ export async function POST(request: Request) {
       if (!item.title) {
         result.errors.push({
           id: item.id,
-          fileName: `Episode #${item.episodeNumber}`,
+          fileName: guestName || 'Unknown',
           error: 'Title is required',
         });
         continue;
       }
 
-      let guestId = item.guestId;
+      let guestId: string | undefined = item.guestId || undefined;
 
       // Create new guest if needed
       if (item.createNewGuest && item.newGuestData) {
@@ -73,19 +87,12 @@ export async function POST(request: Request) {
         result.createdGuestIds.push(newGuest.id);
       }
 
-      // Ensure we have a guest ID
-      if (!guestId) {
-        result.errors.push({
-          id: item.id,
-          fileName: `Episode #${item.episodeNumber}`,
-          error: 'No guest assigned',
-        });
-        continue;
-      }
+      // Auto-generate episode number if not provided
+      const episodeNumber = item.episodeNumber || ++maxEpisodeNumber;
 
-      // Create episode
+      // Create episode with book content fields
       const episodeInput: CreateEpisodeInput = {
-        episodeNumber: item.episodeNumber,
+        episodeNumber,
         title: item.title,
         description: item.description,
         publishDate: item.publishDate || new Date().toISOString().split('T')[0],
@@ -94,19 +101,25 @@ export async function POST(request: Request) {
         featuredQuote: item.featuredQuote,
         quoteTimestamp: item.quoteTimestamp || '',
         topics: item.topics,
+        // Children's book content
+        coreLessons: item.coreLessons,
+        memorableStories: item.memorableStories,
+        quotableMoments: item.quotableMoments,
       };
 
       const episode = await createEpisode(episodeInput, item.transcriptContent);
       result.createdEpisodeIds.push(episode.id);
       result.imported++;
 
-      // Add to existing set to prevent duplicates within same import
-      existingEpisodeNumbers.add(item.episodeNumber);
+      // Track guest name to prevent duplicates within same import
+      if (guestName) {
+        existingGuestNames.add(guestName.toLowerCase());
+      }
     } catch (error) {
-      console.error(`Error importing episode #${item.episodeNumber}:`, error);
+      console.error(`Error importing episode for guest "${guestName}":`, error);
       result.errors.push({
         id: item.id,
-        fileName: `Episode #${item.episodeNumber}`,
+        fileName: guestName || 'Unknown',
         error: error instanceof Error ? error.message : 'Unknown error',
       });
     }

@@ -85,7 +85,7 @@ export async function getEpisodes(): Promise<LennyEpisode[]> {
 
     return episodes.map(ep => ({
       ...ep,
-      guest: guestMap.get(ep.guestId),
+      guest: ep.guestId ? guestMap.get(ep.guestId) : undefined,
     }));
   } catch {
     return [];
@@ -124,8 +124,13 @@ export async function createEpisode(input: CreateEpisodeInput, transcriptContent
   await ensureDirectories();
   const episodes = await getEpisodes();
 
+  // Auto-generate episode number if not provided
+  const episodeNumber = input.episodeNumber ?? (
+    episodes.reduce((max, ep) => Math.max(max, ep.episodeNumber || 0), 0) + 1
+  );
+
   const id = generateId();
-  const transcriptPath = `transcripts/ep-${input.episodeNumber.toString().padStart(3, '0')}.txt`;
+  const transcriptPath = `transcripts/ep-${episodeNumber.toString().padStart(3, '0')}.txt`;
 
   // Save transcript if provided
   if (transcriptContent) {
@@ -135,6 +140,7 @@ export async function createEpisode(input: CreateEpisodeInput, transcriptContent
   const newEpisode: LennyEpisode = {
     id,
     ...input,
+    episodeNumber,
     transcriptPath,
     booksGenerated: 0,
   };
@@ -146,12 +152,12 @@ export async function createEpisode(input: CreateEpisodeInput, transcriptContent
   episodes.push(episodeToSave);
 
   // Sort by episode number descending
-  episodes.sort((a, b) => b.episodeNumber - a.episodeNumber);
+  episodes.sort((a, b) => (b.episodeNumber || 0) - (a.episodeNumber || 0));
 
   await fs.writeFile(EPISODES_FILE, JSON.stringify(episodes, null, 2));
 
-  // Return with populated guest
-  const guest = await getGuest(input.guestId);
+  // Return with populated guest if guestId exists
+  const guest = input.guestId ? await getGuest(input.guestId) : null;
   return { ...newEpisode, guest: guest || undefined };
 }
 
@@ -169,13 +175,13 @@ export async function updateEpisode(id: string, input: Partial<CreateEpisodeInpu
 
   episodes[index] = { ...episodes[index], ...input };
 
-  // Sort by episode number descending
-  episodes.sort((a, b) => b.episodeNumber - a.episodeNumber);
+  // Sort by episode number descending (handle optional episodeNumber)
+  episodes.sort((a, b) => (b.episodeNumber || 0) - (a.episodeNumber || 0));
 
   await fs.writeFile(EPISODES_FILE, JSON.stringify(episodes, null, 2));
 
-  // Return with populated guest
-  const guest = await getGuest(episodes[index].guestId);
+  // Return with populated guest if guestId exists
+  const guest = episodes[index].guestId ? await getGuest(episodes[index].guestId) : null;
   return { ...episodes[index], guest: guest || undefined };
 }
 

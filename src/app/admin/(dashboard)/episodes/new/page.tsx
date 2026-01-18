@@ -8,7 +8,7 @@ export default function NewEpisodePage() {
           Add New Episode
         </h1>
         <p className="text-gray-600 mt-1">
-          Create a new Lenny's Podcast episode with transcript
+          Create a new Lenny&apos;s Podcast episode with transcript
         </p>
       </div>
 

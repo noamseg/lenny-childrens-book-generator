@@ -1,26 +1,37 @@
 import { LennyGuest, LENNY_TOPICS } from '@/types/lenny';
 
-// System prompt for bulk transcript analysis
-export const BULK_ANALYSIS_SYSTEM_PROMPT = `You are an expert at analyzing Lenny's Podcast transcripts. Your job is to extract structured metadata from podcast episode transcripts to help populate an episode database.
+// System prompt for bulk transcript analysis - optimized for children's book generation
+export const BULK_ANALYSIS_SYSTEM_PROMPT = `You are an expert at analyzing Lenny's Podcast transcripts for a children's book generator. Your job is to extract episode metadata AND content that can be transformed into fun, educational children's books.
 
-For each transcript, you must extract:
-1. Episode number (from filename pattern if provided)
-2. A compelling title that captures the main topic
-3. A 2-3 sentence description summarizing the episode
-4. Guest information (name, title, company)
-5. A memorable, shareable quote from the transcript
-6. Topics that best categorize the episode
-7. Duration estimate based on word count
+FILENAME PARSING (CRITICAL):
+- Guest name comes from the filename: "Brian Chesky.txt" → Guest: Brian Chesky
+- For two guests: "Alice Smith and Bob Jones.txt" → guestName: "Alice Smith and Bob Jones"
+- The filename IS the authoritative source for guest names
 
-TOPIC CATEGORIES (select 2-4 that best fit):
-${LENNY_TOPICS.join(', ')}
+TRANSCRIPT ANALYSIS:
+1. Title - Compelling 5-10 word title capturing the main insight
+2. Description - 2-3 sentence summary for episode selection
+3. Guest enrichment - Find title, company, bio context FROM the transcript to enrich the guest info
+4. Topics - 2-4 from: ${LENNY_TOPICS.join(', ')}
+5. Featured quote - Best single quote for the episode card
+6. Duration estimate - ~150 words = 1 minute
+
+CHILDREN'S BOOK EXTRACTION (IMPORTANT):
+7. Core Lessons (3-5) - Frameworks, mental models, principles that could become book themes
+   Examples: "Talk to your customers before building", "Start with something people love, not just like"
+
+8. Memorable Stories (2-4) - Anecdotes suitable for narrative children's book adaptation
+   Examples: "Started Airbnb by renting air mattresses to pay rent", "Got rejected by every investor"
+
+9. Quotable Moments (3-5) - Punchy quotes perfect for illustrations or callouts in kids' books
+   Examples: "You can't delegate taste", "Move fast and break things"
 
 IMPORTANT GUIDELINES:
-- If information cannot be reliably extracted, use null
-- For quotes, select something insightful, memorable, or actionable
-- Titles should be compelling but accurate to the content
-- Descriptions should help listeners decide if they want to listen
-- Duration estimation: approximately 150 words = 1 minute of speech
+- Guest name MUST come from filename, use transcript only to find title/company
+- Make lessons actionable and simple enough for kids to understand
+- Stories should have clear beginnings, middles, and potential endings
+- Quotes should be memorable, short, and visually illustratable
+- If information cannot be reliably extracted, use null or empty array
 
 You MUST respond with valid JSON only.`;
 
@@ -30,8 +41,20 @@ interface FormatAnalysisPromptParams {
   existingGuests: LennyGuest[];
 }
 
+// Helper to parse guest name from filename (e.g., "Brian Chesky.txt" → "Brian Chesky")
+export function parseGuestNameFromFilename(fileName: string): string | null {
+  // Remove extension
+  const withoutExt = fileName.replace(/\.[^/.]+$/, '');
+  // Clean up and return if it looks like a name (has at least 2 characters)
+  const cleaned = withoutExt.trim();
+  return cleaned.length >= 2 ? cleaned : null;
+}
+
 export function formatAnalysisPrompt(params: FormatAnalysisPromptParams): string {
   const { fileName, transcriptContent, existingGuests } = params;
+
+  // Parse guest name from filename
+  const guestNameFromFilename = parseGuestNameFromFilename(fileName);
 
   // Truncate transcript to ~12k words (roughly 80k characters) to stay within context limits
   const maxChars = 80000;
@@ -44,12 +67,12 @@ export function formatAnalysisPrompt(params: FormatAnalysisPromptParams): string
     ? existingGuests.map(g => `- ${g.name} (${g.title} at ${g.company}) [ID: ${g.id}]`).join('\n')
     : 'No existing guests in database.';
 
-  return `Analyze this Lenny's Podcast transcript and extract episode metadata.
+  return `Analyze this Lenny's Podcast transcript and extract episode metadata for children's book generation.
 
 FILENAME: ${fileName}
-(Use this to extract episode number if present, e.g., "ep-123.txt" or "episode_45.txt")
+GUEST NAME (from filename): ${guestNameFromFilename || 'Could not parse'}
 
-EXISTING GUESTS (for matching):
+EXISTING GUESTS (for matching by name):
 ${guestList}
 
 TRANSCRIPT:
@@ -59,26 +82,43 @@ ${truncatedContent}
 
 Respond with a JSON object in this exact format:
 {
-  "episodeNumber": <number or null if not determinable from filename>,
-  "title": "<compelling episode title based on main topic>",
+  "title": "<compelling 5-10 word episode title based on main insight>",
   "description": "<2-3 sentence summary of episode content>",
   "featuredQuote": "<memorable/shareable quote from the transcript - include the speaker name if known>",
   "quoteTimestamp": null,
   "topics": ["<topic1>", "<topic2>", ...],
   "estimatedDuration": "<e.g., '1h 15m' based on word count>",
-  "guestName": "<full name of guest or null>",
-  "guestTitle": "<job title of guest or null>",
-  "guestCompany": "<company name or null>",
-  "matchedGuestId": "<ID from existing guests list if this matches an existing guest, otherwise null>",
+  "guestName": "${guestNameFromFilename || '<parse from transcript if filename unclear>'}",
+  "guestTitle": "<job title found in transcript or null>",
+  "guestCompany": "<company name found in transcript or null>",
+  "matchedGuestId": "<ID from existing guests list if guest name matches, otherwise null>",
   "confidence": "<'high' | 'medium' | 'low' based on quality of transcript>",
-  "warnings": ["<any issues or notes about this transcript>"]
+  "warnings": ["<any issues or notes about this transcript>"],
+  "coreLessons": [
+    "<lesson 1: framework or mental model from the episode>",
+    "<lesson 2: key principle or insight>",
+    "<lesson 3: actionable takeaway>"
+  ],
+  "memorableStories": [
+    "<story 1: brief description of an anecdote that could become a book narrative>",
+    "<story 2: another compelling story from the episode>"
+  ],
+  "quotableMoments": [
+    "<quote 1: punchy, memorable quote suitable for illustration>",
+    "<quote 2: another quotable moment>",
+    "<quote 3: another quotable moment>"
+  ]
 }
 
 IMPORTANT:
+- Guest name "${guestNameFromFilename}" comes from the filename - use this as the authoritative name
+- Use the transcript to find guest's title and company to enrich the guest profile
 - Only use topic values from the allowed list: ${LENNY_TOPICS.join(', ')}
-- If the guest matches an existing guest, include their ID in matchedGuestId
-- Set confidence to 'low' if the transcript is unclear or incomplete
-- Add warnings for any potential issues (duplicate episode, unclear guest, etc.)`;
+- If the guest name matches an existing guest, include their ID in matchedGuestId
+- coreLessons: Extract 3-5 key frameworks, mental models, or principles
+- memorableStories: Extract 2-4 anecdotes that could become children's book narratives
+- quotableMoments: Extract 3-5 punchy quotes suitable for illustrations
+- Set confidence to 'low' if the transcript is unclear or incomplete`;
 }
 
 // Helper to estimate duration from word count

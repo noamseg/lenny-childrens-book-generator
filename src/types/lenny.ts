@@ -13,12 +13,12 @@ export interface LennyGuest {
 
 export interface LennyEpisode {
   id: string;
-  episodeNumber: number;
+  episodeNumber?: number;  // Optional - auto-generated for internal ordering
   title: string;
   description: string;
   publishDate: string;     // ISO date
   duration: string;        // e.g., "1h 23m"
-  guestId: string;         // Reference to LennyGuest
+  guestId?: string;        // Reference to LennyGuest (optional)
   guest?: LennyGuest;      // Populated when fetched
   featuredQuote: string;
   quoteTimestamp: string;
@@ -27,21 +27,29 @@ export interface LennyEpisode {
   spotifyUrl?: string;
   youtubeUrl?: string;
   booksGenerated: number;  // Track popularity
+  // Children's book content extraction
+  coreLessons?: string[];      // Key frameworks, mental models, takeaways
+  memorableStories?: string[]; // Anecdotes that could become book narratives
+  quotableMoments?: string[];  // Punchy quotes for illustrations/callouts
 }
 
 // Form types for creating/editing
 export interface CreateEpisodeInput {
-  episodeNumber: number;
+  episodeNumber?: number;  // Optional - auto-generated if not provided
   title: string;
   description: string;
   publishDate: string;
   duration: string;
-  guestId: string;
+  guestId?: string; // Optional - some episodes may not have a guest assigned
   featuredQuote: string;
   quoteTimestamp: string;
   topics: string[];
   spotifyUrl?: string;
   youtubeUrl?: string;
+  // Children's book content
+  coreLessons?: string[];
+  memorableStories?: string[];
+  quotableMoments?: string[];
 }
 
 export interface CreateGuestInput {

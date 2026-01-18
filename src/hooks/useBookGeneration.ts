@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import {
   Book,
   BookGenerationProgress,
+  CharacterDescriptions,
   GenerationStatus,
   GenerationStep,
   IllustrationStyle,
@@ -24,6 +25,11 @@ interface GenerateBookParams {
   illustrationStyle: IllustrationStyle;
   transcriptContent: string;
   additionalContext?: string;
+  // Episode content for richer story generation
+  guestName?: string;
+  coreLessons?: string[];
+  memorableStories?: string[];
+  quotableMoments?: string[];
 }
 
 export function useBookGeneration(options: UseBookGenerationOptions = {}) {
@@ -69,6 +75,10 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
         illustrationStyle,
         transcriptContent,
         additionalContext,
+        guestName,
+        coreLessons,
+        memorableStories,
+        quotableMoments,
       } = params;
 
       setError(null);
@@ -104,6 +114,10 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
             transcriptContent,
             additionalContext,
             pageCount: 10,
+            guestName,
+            coreLessons,
+            memorableStories,
+            quotableMoments,
           }),
         });
 
@@ -113,6 +127,9 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
 
         const storyData = await storyResponse.json();
         const { story } = storyData.data;
+
+        // Extract character descriptions for consistent illustration generation
+        const characterDescriptions: CharacterDescriptions | undefined = story.characterDescriptions;
 
         // Create initial book structure
         const pages: Page[] = story.pages.map(
@@ -132,6 +149,7 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
           theme,
           illustrationStyle,
           pages,
+          characterDescriptions,
           createdAt: new Date(),
           updatedAt: new Date(),
         };
@@ -158,6 +176,7 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
             })),
             style: illustrationStyle,
             childName,
+            characterDescriptions,
           }),
         });
 
@@ -237,6 +256,7 @@ export function useBookGeneration(options: UseBookGenerationOptions = {}) {
             pages: [{ pageNumber, imagePrompt: page.imagePrompt }],
             style: book.illustrationStyle,
             childName: book.childName,
+            characterDescriptions: book.characterDescriptions,
           }),
         });
 

@@ -1,3 +1,8 @@
+export interface CharacterDescriptions {
+  mainCharacter: string;
+  sidekick?: string;
+}
+
 export interface Book {
   id: string;
   childName: string;
@@ -6,6 +11,7 @@ export interface Book {
   illustrationStyle: IllustrationStyle;
   pages: Page[];
   coverImageUrl?: string;
+  characterDescriptions?: CharacterDescriptions;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -54,6 +60,7 @@ export type IllustrationStyle =
 
 export interface StoryGenerationResult {
   title: string;
+  characterDescriptions?: CharacterDescriptions;
   pages: Array<{
     pageNumber: number;
     text: string;

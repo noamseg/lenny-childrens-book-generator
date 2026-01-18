@@ -1,4 +1,4 @@
-import { IllustrationStyle } from '@/types';
+import { IllustrationStyle, CharacterDescriptions } from '@/types';
 
 const STABILITY_API_URL = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image';
 
@@ -6,6 +6,7 @@ interface GenerateImageParams {
   prompt: string;
   style: IllustrationStyle;
   negativePrompt?: string;
+  characterDescriptions?: CharacterDescriptions;
 }
 
 interface StabilityResponse {
@@ -29,15 +30,32 @@ const STYLE_PREFIXES: Record<IllustrationStyle, string> = {
 const DEFAULT_NEGATIVE_PROMPT =
   'scary, violent, adult content, realistic photo, photorealistic, dark, horror, blood, weapons, nsfw, text, words, letters, watermark, signature';
 
+// Build character reference string to prepend to image prompts
+function buildCharacterReference(characterDescriptions?: CharacterDescriptions): string {
+  if (!characterDescriptions) return '';
+
+  const parts: string[] = [];
+  if (characterDescriptions.mainCharacter) {
+    parts.push(`Main character: ${characterDescriptions.mainCharacter}`);
+  }
+  if (characterDescriptions.sidekick) {
+    parts.push(`Sidekick: ${characterDescriptions.sidekick}`);
+  }
+
+  return parts.length > 0 ? `${parts.join('. ')}. ` : '';
+}
+
 export async function generateImage(params: GenerateImageParams): Promise<string> {
-  const { prompt, style, negativePrompt = DEFAULT_NEGATIVE_PROMPT } = params;
+  const { prompt, style, negativePrompt = DEFAULT_NEGATIVE_PROMPT, characterDescriptions } = params;
 
   const apiKey = process.env.STABILITY_API_KEY;
   if (!apiKey) {
     throw new Error('STABILITY_API_KEY environment variable is not set');
   }
 
-  const styledPrompt = `${STYLE_PREFIXES[style]} ${prompt}`;
+  // Prepend character descriptions for consistency across pages
+  const characterReference = buildCharacterReference(characterDescriptions);
+  const styledPrompt = `${STYLE_PREFIXES[style]} ${characterReference}${prompt}`;
 
   const response = await fetch(STABILITY_API_URL, {
     method: 'POST',
@@ -83,6 +101,7 @@ export async function generateImage(params: GenerateImageParams): Promise<string
 export async function generateBookImages(
   pages: Array<{ pageNumber: number; imagePrompt: string }>,
   style: IllustrationStyle,
+  characterDescriptions?: CharacterDescriptions,
   onProgress?: (pageNumber: number, imageUrl: string) => void
 ): Promise<Array<{ pageNumber: number; imageUrl: string }>> {
   const results: Array<{ pageNumber: number; imageUrl: string }> = [];
@@ -92,6 +111,7 @@ export async function generateBookImages(
     const imageUrl = await generateImage({
       prompt: page.imagePrompt,
       style,
+      characterDescriptions,
     });
 
     results.push({

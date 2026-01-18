@@ -14,6 +14,10 @@ const generateImagesSchema = z.object({
   ).min(1, 'At least one page is required'),
   style: z.enum(['watercolor', 'cartoon', 'storybook', 'whimsical', 'minimalist']),
   childName: z.string().min(1),
+  characterDescriptions: z.object({
+    mainCharacter: z.string(),
+    sidekick: z.string().optional(),
+  }).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -34,7 +38,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    const { bookId, pages, style, childName } = parseResult.data;
+    const { bookId, pages, style, childName, characterDescriptions } = parseResult.data;
 
     // Check for API key
     if (!process.env.STABILITY_API_KEY) {
@@ -58,7 +62,8 @@ export async function POST(request: NextRequest) {
     // Generate images
     const images = await generateBookImages(
       pages,
-      style as IllustrationStyle
+      style as IllustrationStyle,
+      characterDescriptions
     );
 
     const response: ApiResponse<GenerateImagesResponse> = {

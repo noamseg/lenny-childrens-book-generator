@@ -1,4 +1,4 @@
-import { Book, BookGenerationProgress, IllustrationStyle, StoryGenerationResult } from './book';
+import { Book, BookGenerationProgress, CharacterDescriptions, IllustrationStyle, StoryGenerationResult } from './book';
 import { TranscriptValidationResult } from './transcript';
 
 // Base API response wrapper
@@ -50,6 +50,7 @@ export interface GenerateImagesRequest {
   }>;
   style: IllustrationStyle;
   childName: string;
+  characterDescriptions?: CharacterDescriptions;
 }
 
 export interface GenerateImagesResponse {

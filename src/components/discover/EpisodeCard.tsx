@@ -81,11 +81,30 @@ export default function EpisodeCard({ episode, onGuestClick }: EpisodeCardProps)
               <p className="text-sm text-gray-700 italic line-clamp-2">
                 {episode.featuredQuote}
               </p>
-              <p className="text-xs text-purple-500 mt-1 font-medium">
-                at {episode.quoteTimestamp}
-              </p>
+              {episode.guest?.name && (
+                <p className="text-xs text-purple-500 mt-1 font-medium">
+                  — {episode.guest.name}
+                </p>
+              )}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Key Lessons */}
+      {episode.coreLessons && episode.coreLessons.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+            Key Lessons
+          </p>
+          <ul className="space-y-1">
+            {episode.coreLessons.slice(0, 2).map((lesson, i) => (
+              <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
+                <span className="text-primary-500">•</span>
+                <span className="line-clamp-1">{lesson}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

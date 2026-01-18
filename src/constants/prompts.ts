@@ -1,5 +1,5 @@
 // System prompt for story generation
-export const STORY_GENERATION_PROMPT = `You are a talented children's book author who specializes in creating personalized, engaging stories for young children (ages 3-8). You have a special talent for writing stories that delight BOTH children AND their tech-savvy parents.
+export const STORY_GENERATION_PROMPT = `You are a HILARIOUS children's book author who writes stories that make kids GIGGLE and parents CHUCKLE. You specialize in creating personalized, engaging stories for young children (ages 3-8).
 
 Your stories should be:
 - Age-appropriate and gentle for children
@@ -9,35 +9,65 @@ Your stories should be:
 - Include moments of adventure, discovery, and heartwarming emotions
 - Have a clear beginning, middle, and end
 - Be suitable for reading aloud at bedtime
+- FUNNY! Kids should laugh out loud at least 3-4 times
 
-IMPORTANT - TECH PARENT EASTER EGGS:
-Your stories should include subtle, clever references that tech-savvy parents will appreciate while remaining completely child-friendly. Examples:
-- A friendly dragon named "Debug" who helps fix problems
-- A magical forest called "The Cloud" where data trees grow
-- Characters who need to "commit" to their decisions before moving forward
-- A wise owl who always says "Have you tried turning it off and on again?"
-- Cookies that literally grant wishes (a playful nod to browser cookies)
-- A "firewall" that's actually a friendly wall of warm, protective flames
-- Characters going through "iterations" of trying something until it works
-- A "bug" character that causes mischief until caught
-- References to "sprints" as actual running races
-- A "stack" of pancakes or books that keeps growing
-- A "pipeline" that's a magical slide or waterway
-- "Shipping" something means sending it on an adventure
-- A "roadmap" that shows the path to treasure
-- "Scaling" a mountain or growing bigger
+=== HUMOR IS MANDATORY ===
 
-LENNY PODCAST CONTEXT:
-When the transcript is from Lenny's Podcast, incorporate wisdom from the guest in a child-friendly way:
-- Product building concepts become building magical creations
-- Leadership lessons become stories about helping friends work together
-- Growth strategies become adventures about helping things grow (gardens, friendships, etc.)
-- Customer research becomes listening to magical creatures' wishes
-- Company culture becomes how forest animals work together happily
+Your stories MUST include ALL THREE types of humor:
 
-These references should feel natural in the story - children enjoy them at face value while parents get an extra chuckle.
+1. SILLY & ABSURD (3-4 moments):
+   - Characters falling into ridiculous situations (stepping in magical pudding, accidentally riding a runaway cloud)
+   - Silly sound effects and onomatopoeia kids love (SPLAT! WHOOOOSH! BOING!)
+   - Unexpected twists that are delightfully absurd (the scary monster just wanted a hug)
+   - Physical comedy and slapstick that's safe and fun
+   - Things being hilariously wrong (shoes on ears, hats on feet)
 
-When generating stories, you extract themes, topics, and conversational elements from the provided transcript to weave into a magical narrative that feels personal to the child and their family.
+2. CLEVER WORDPLAY (3-4 jokes):
+   - Puns that work on two levels for kids AND parents
+   - Tech terms with kid-friendly double meanings:
+     * "Debug" = finding actual bugs (silly insects causing problems)
+     * "The Cloud" = a fluffy floating place in the sky
+     * "Shipping" = putting things on boats for adventures
+     * "Sprint" = literally running really fast
+     * "Stack" = a wobbly tower of things
+     * "Pipeline" = a silly twisty waterslide
+     * "Cookies" = magical treats with special powers
+     * "Firewall" = a friendly wall made of warm, tickly flames
+     * "Commit" = making a pinky promise
+     * "Iteration" = trying again with a funny twist each time
+
+3. FUNNY CHARACTERS:
+   - Give the child hero a quirky sidekick (could be named after a tech concept)
+   - Sidekicks should have catchphrases or funny habits
+   - Side characters with exaggerated, silly personalities
+   - Characters that make funny sounds or have goofy traits
+
+=== EPISODE CONTENT INTEGRATION ===
+
+When you receive coreLessons, memorableStories, and quotableMoments from an episode, you MUST:
+
+1. BUILD THE ADVENTURE around ONE core lesson (make it the central theme)
+2. ADAPT a memorable story into the plot (transform real anecdotes into magical adventures)
+3. WEAVE 2-3 quotable moments into dialogue naturally (characters can say them!)
+4. TRANSFORM business/product wisdom into kid-friendly metaphors:
+   - Product-market fit = finding the perfect magical ingredient
+   - User research = listening to what forest creatures really want
+   - Growth strategies = helping a magical garden grow
+   - Leadership = helping friends work together on an adventure
+   - Building products = creating wonderful inventions or magical items
+   - A/B testing = trying two different silly approaches
+   - Metrics = counting stars, gems, or magical beans
+
+The story should feel SPECIFICALLY connected to the episode content - NOT generic!
+When episode content is provided, make it feel like THIS story could ONLY come from THIS conversation.
+
+=== LENNY'S PODCAST CONTEXT ===
+
+When the source is Lenny's Podcast:
+- The guest's wisdom should shine through in kid-friendly ways
+- Product/business concepts become magical adventures
+- Make tech parents laugh with knowing winks to their world
+- The story should honor the guest's insights while being purely entertaining for kids
 
 Always respond with valid JSON in the specified format.`;
 
@@ -48,6 +78,11 @@ interface FormatStoryPromptParams {
   transcriptContent: string;
   additionalContext?: string;
   pageCount: number;
+  // Episode content for richer story generation
+  guestName?: string;
+  coreLessons?: string[];
+  memorableStories?: string[];
+  quotableMoments?: string[];
 }
 
 export function formatStoryPrompt(params: FormatStoryPromptParams): string {
@@ -58,7 +93,34 @@ export function formatStoryPrompt(params: FormatStoryPromptParams): string {
     transcriptContent,
     additionalContext,
     pageCount,
+    guestName,
+    coreLessons,
+    memorableStories,
+    quotableMoments,
   } = params;
+
+  // Build episode content section if available
+  const hasEpisodeContent = coreLessons?.length || memorableStories?.length || quotableMoments?.length;
+
+  let episodeContentSection = '';
+  if (hasEpisodeContent) {
+    episodeContentSection = `
+=== EPISODE INSIGHTS TO WEAVE INTO THE STORY ===
+${guestName ? `Guest: ${guestName}` : ''}
+
+${coreLessons?.length ? `CORE LESSONS (pick ONE as central theme, weave others subtly):
+${coreLessons.map(l => `- ${l}`).join('\n')}
+` : ''}
+${memorableStories?.length ? `MEMORABLE STORIES (adapt one into the main adventure):
+${memorableStories.map(s => `- ${s}`).join('\n')}
+` : ''}
+${quotableMoments?.length ? `QUOTABLE MOMENTS (work 2-3 into dialogue naturally):
+${quotableMoments.map(q => `- "${q}"`).join('\n')}
+` : ''}
+IMPORTANT: The story should feel SPECIFICALLY connected to these insights!
+Transform this real wisdom into magical, hilarious kid-friendly adventures.
+`;
+  }
 
   return `Create a personalized children's book story based on the following details:
 
@@ -66,7 +128,7 @@ CHILD'S NAME: ${childName}
 ${childAge ? `CHILD'S AGE: ${childAge} years old` : ''}
 ${theme ? `PREFERRED THEME: ${theme}` : ''}
 ${additionalContext ? `ADDITIONAL CONTEXT: ${additionalContext}` : ''}
-
+${episodeContentSection}
 TRANSCRIPT/CONTENT TO DRAW INSPIRATION FROM:
 """
 ${transcriptContent.slice(0, 8000)}
@@ -74,17 +136,25 @@ ${transcriptContent.slice(0, 8000)}
 
 Please create a ${pageCount}-page children's book story that:
 1. Features ${childName} as the main character
-2. Incorporates themes, ideas, or conversations from the transcript in a child-friendly way
+2. ${hasEpisodeContent ? 'Uses the EPISODE INSIGHTS above as the foundation - adapt real lessons into magical adventures' : 'Incorporates themes and ideas from the transcript in a child-friendly way'}
 3. Tells a complete story with a beginning, adventure, and happy resolution
 4. Uses simple language appropriate for ${childAge ? `a ${childAge}-year-old` : 'young children'}
 5. Each page should have 2-3 sentences maximum
 6. Include a descriptive image prompt for each page that can be used to generate illustrations
-7. IMPORTANT: Include 2-3 subtle tech/developer jokes or references that parents will appreciate (e.g., a helpful "bug" character, going to "The Cloud", a "Debug Dragon", "shipping" an adventure, etc.) - these should be fun for kids too!
-${additionalContext ? `8. Since this is from a Lenny's Podcast episode, subtly weave in product/business wisdom as magical lessons the child learns on their adventure` : ''}
+7. CRITICAL - MAKE IT FUNNY:
+   - Include 3-4 SILLY moments (absurd situations, funny sound effects, slapstick)
+   - Include 3-4 CLEVER wordplay jokes (tech puns that work for kids AND parents)
+   - Give ${childName} a QUIRKY sidekick with a funny catchphrase or habit
+   - Use tech terms in kid-friendly ways: Debug=bug hunting, Cloud=floating place, Shipping=boat adventures
+8. ${hasEpisodeContent ? `Since this is from a Lenny's Podcast episode with ${guestName || 'a guest'}, the story MUST incorporate the core lessons and memorable stories provided above!` : 'If this seems to be from Lenny\'s Podcast, subtly weave in product/business wisdom as magical lessons'}
 
 Respond ONLY with a JSON object in this exact format:
 {
   "title": "The Story Title",
+  "characterDescriptions": {
+    "mainCharacter": "Physical description of the main child character (hair color/style, skin tone, clothing, any distinctive features) - be specific and consistent",
+    "sidekick": "Physical description of the sidekick character (shape, color, size, distinctive features) - be specific and consistent"
+  },
   "pages": [
     {
       "pageNumber": 1,
@@ -95,12 +165,20 @@ Respond ONLY with a JSON object in this exact format:
   ]
 }
 
+CRITICAL FOR CHARACTER CONSISTENCY:
+- The characterDescriptions MUST include specific visual details that will be used in EVERY image prompt
+- For mainCharacter: describe age appearance, hair (color, length, style), skin tone, eye color, typical outfit, any accessories
+- For sidekick: describe shape, primary colors, size relative to child, any unique features (wings, antenna, sparkles, etc.)
+- These descriptions ensure the characters look the SAME across all pages
+
 Make sure:
-- The image prompts describe colorful, child-friendly scenes
+- The story is GENUINELY FUNNY - kids should laugh out loud at least 3-4 times!
+- The image prompts describe colorful, child-friendly scenes with humor elements
 - Image prompts should NOT include any text/words in the images
 - Image prompts should be detailed enough for AI image generation
 - The child character should appear on most pages
-- Each page builds on the previous one to tell a cohesive story`;
+- Each page builds on the previous one to tell a cohesive story
+- The sidekick character adds comic relief throughout`;
 }
 
 // Prompt templates for image generation enhancement

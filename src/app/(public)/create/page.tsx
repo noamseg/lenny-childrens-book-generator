@@ -89,7 +89,9 @@ function CreatePageContent() {
         fetch(`/api/lenny/episodes/${episodeId}`, { method: 'POST' }).catch(console.error);
       }
       clearDraft();
+      console.log('[Create] Saving book to localStorage:', book.id, book);
       setGeneratedBook(book); // Save book to localStorage before redirect
+      console.log('[Create] Redirecting to preview:', `/preview/${book.id}`);
       router.push(`/preview/${book.id}`);
     },
     onError: (error) => {
@@ -243,21 +245,6 @@ function CreatePageContent() {
             </Card>
           </div>
         )}
-
-        {/* Progress indicator */}
-        <div className="mb-8">
-          <ProgressBar
-            progress={getOverallProgress()}
-            label={
-              step === 'upload'
-                ? 'Step 1: Upload Transcript'
-                : step === 'customize'
-                ? 'Step 2: Customize Your Book'
-                : 'Step 3: Creating Your Book'
-            }
-            color="primary"
-          />
-        </div>
 
         {/* Loading episode */}
         {episodeLoading && (

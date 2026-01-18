@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { safeJsonParse } from '@/lib/utils';
+import { Book } from '@/types';
 
 export function useLocalStorage<T>(
   key: string,
@@ -82,4 +83,9 @@ export function useRecentBooks() {
       thumbnailUrl?: string;
     }>
   >('recent-books', []);
+}
+
+// Hook for storing the currently generated book (for preview page)
+export function useGeneratedBook() {
+  return useLocalStorage<Book | null>('generated-book', null);
 }

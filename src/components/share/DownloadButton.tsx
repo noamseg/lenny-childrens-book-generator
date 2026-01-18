@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui';
+import { Book } from '@/types';
 
 interface DownloadButtonProps {
   bookId: string;
+  book?: Book; // Full book object for PDF generation
   onDownload?: () => Promise<string>; // Returns download URL
   onDownloadComplete?: () => void; // Called after successful download
 }
 
-export default function DownloadButton({ bookId, onDownload, onDownloadComplete }: DownloadButtonProps) {
+export default function DownloadButton({ bookId, book, onDownload, onDownloadComplete }: DownloadButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,11 +35,11 @@ export default function DownloadButton({ bookId, onDownload, onDownloadComplete 
           onDownloadComplete();
         }
       } else {
-        // Default: call the generate-pdf API
+        // Default: call the generate-pdf API with full book object
         const response = await fetch('/api/generate-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bookId }),
+          body: JSON.stringify({ bookId, book }),
         });
 
         if (!response.ok) {

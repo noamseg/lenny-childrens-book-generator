@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Container } from '@/components/layout';
 import { Button, Card, Input, ProgressBar } from '@/components/ui';
 import { TranscriptUploader } from '@/components/upload';
-import { useTranscript, useBookGeneration, useBookDraft } from '@/hooks';
+import { useTranscript, useBookGeneration, useBookDraft, useGeneratedBook } from '@/hooks';
 import { ILLUSTRATION_STYLES, STORY_THEMES, AGE_OPTIONS } from '@/constants';
 import { IllustrationStyle, LennyEpisode } from '@/types';
 
@@ -81,6 +81,7 @@ function CreatePageContent() {
 
   // Hooks
   const transcript = useTranscript();
+  const [, setGeneratedBook] = useGeneratedBook();
   const bookGeneration = useBookGeneration({
     onComplete: (book) => {
       // Increment books generated count for this episode
@@ -88,6 +89,7 @@ function CreatePageContent() {
         fetch(`/api/lenny/episodes/${episodeId}`, { method: 'POST' }).catch(console.error);
       }
       clearDraft();
+      setGeneratedBook(book); // Save book to localStorage before redirect
       router.push(`/preview/${book.id}`);
     },
     onError: (error) => {
@@ -164,6 +166,11 @@ function CreatePageContent() {
         illustrationStyle,
         transcriptContent,
         additionalContext,
+        // Pass episode content for richer story generation
+        guestName: episode?.guest?.name,
+        coreLessons: episode?.coreLessons,
+        memorableStories: episode?.memorableStories,
+        quotableMoments: episode?.quotableMoments,
       });
     } catch {
       // Error handled in hook

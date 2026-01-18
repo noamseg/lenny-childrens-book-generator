@@ -140,7 +140,7 @@ Please create a ${pageCount}-page children's book story that:
 3. Tells a complete story with a beginning, adventure, and happy resolution
 4. Uses simple language appropriate for ${childAge ? `a ${childAge}-year-old` : 'young children'}
 5. Each page should have 2-3 sentences maximum
-6. Include a descriptive image prompt for each page that can be used to generate illustrations
+6. Include a SCENE-FOCUSED image prompt for each page (see critical rules below)
 7. CRITICAL - MAKE IT FUNNY:
    - Include 3-4 SILLY moments (absurd situations, funny sound effects, slapstick)
    - Include 3-4 CLEVER wordplay jokes (tech puns that work for kids AND parents)
@@ -159,21 +159,40 @@ Respond ONLY with a JSON object in this exact format:
     {
       "pageNumber": 1,
       "text": "The story text for this page...",
-      "imagePrompt": "A detailed prompt describing the illustration for this page..."
+      "imagePrompt": "A scene-focused prompt describing the ACTION and SETTING..."
     },
     // ... more pages
   ]
 }
 
 CRITICAL FOR CHARACTER CONSISTENCY:
-- The characterDescriptions MUST include specific visual details that will be used in EVERY image prompt
+- The characterDescriptions MUST include specific visual details
 - For mainCharacter: describe age appearance, hair (color, length, style), skin tone, eye color, typical outfit, any accessories
 - For sidekick: describe shape, primary colors, size relative to child, any unique features (wings, antenna, sparkles, etc.)
-- These descriptions ensure the characters look the SAME across all pages
+- These descriptions are used as REFERENCE IMAGES - they ensure consistent character appearance
+
+CRITICAL FOR IMAGE PROMPTS - SCENE-FOCUSED ONLY:
+Each imagePrompt must describe THE SCENE/ACTION only. DO NOT include character appearance descriptions in imagePrompts - that's handled separately by the characterDescriptions.
+
+Each imagePrompt should include:
+- What is happening (the action/narrative moment)
+- Where it's happening (the setting/environment)
+- The mood/emotion of the moment
+- Other objects, creatures, or environmental details in the scene
+- Visual humor elements if relevant
+
+GOOD imagePrompt examples:
+- "climbing a giant shimmering beanstalk, reaching for glowing golden leaves, swirling purple clouds in the background, sense of wonder and excitement"
+- "splashing into a pool of rainbow-colored pudding, surprised expression, giggles erupting, silly mess everywhere"
+- "tiptoeing through a forest of giant candy canes, moonlight filtering through, mischievous grin, a trail of cookie crumbs behind"
+
+BAD imagePrompt examples (DO NOT do this):
+- "A 5-year-old girl with curly brown hair climbing a beanstalk" (character description not needed!)
+- "The child wearing a blue dress stands in a meadow" (don't describe character appearance!)
 
 Make sure:
 - The story is GENUINELY FUNNY - kids should laugh out loud at least 3-4 times!
-- The image prompts describe colorful, child-friendly scenes with humor elements
+- Image prompts focus on ACTION and SETTING, not character appearance
 - Image prompts should NOT include any text/words in the images
 - Image prompts should be detailed enough for AI image generation
 - The child character should appear on most pages

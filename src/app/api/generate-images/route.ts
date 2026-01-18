@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { generateBookImages } from '@/lib/stability';
+import { generateBookImages, configureFalClient } from '@/lib/fal';
 import { ApiResponse, GenerateImagesResponse, IllustrationStyle } from '@/types';
 
 // Request validation schema
@@ -38,14 +38,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    const { bookId, pages, style, childName, characterDescriptions } = parseResult.data;
+    const { bookId, pages, style, characterDescriptions } = parseResult.data;
 
     // Check for API key
-    if (!process.env.STABILITY_API_KEY) {
+    if (!process.env.FAL_KEY) {
       // Return placeholder images if no API key (for development)
       const placeholderImages = pages.map((page) => ({
         pageNumber: page.pageNumber,
-        imageUrl: `https://placehold.co/1024x1024/E8D5B7/333333?text=Page+${page.pageNumber}`,
+        imageUrl: `https://placehold.co/1920x1080/E8D5B7/333333?text=Page+${page.pageNumber}`,
       }));
 
       const response: ApiResponse<GenerateImagesResponse> = {
@@ -59,7 +59,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response);
     }
 
-    // Generate images
+    // Configure fal.ai client
+    configureFalClient();
+
+    // Generate images with character consistency
+    // The fal.ts module handles:
+    // 1. Generating a character reference image from characterDescriptions
+    // 2. Using that reference for consistent character appearance in each page
     const images = await generateBookImages(
       pages,
       style as IllustrationStyle,

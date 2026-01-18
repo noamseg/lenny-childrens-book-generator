@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.26.0",
+    "@fal-ai/client": "^1.8.3",
     "@react-pdf/renderer": "^3.4.0",
     "next": "^14.2.0",
     "pdfjs-dist": "^4.0.379",

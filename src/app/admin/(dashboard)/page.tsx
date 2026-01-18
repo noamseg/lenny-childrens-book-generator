@@ -52,14 +52,14 @@ export default async function AdminDashboard() {
           <h2 className="text-lg font-display font-bold text-gray-900 mb-4">
             Quick Actions
           </h2>
-          <div className="space-y-4">
-            <Link href="/admin/episodes/new">
+          <div className="flex flex-col gap-4">
+            <Link href="/admin/episodes/new" className="block">
               <Button className="w-full justify-start gap-3">
                 <span className="text-lg">➕</span>
                 Add New Episode
               </Button>
             </Link>
-            <Link href="/admin/episodes/bulk-upload">
+            <Link href="/admin/episodes/bulk-upload" className="block">
               <Button variant="outline" className="w-full justify-start gap-3">
                 <span className="text-lg">📁</span>
                 Bulk Upload Episodes
